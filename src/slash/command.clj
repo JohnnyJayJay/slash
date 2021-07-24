@@ -81,6 +81,9 @@
     `(let [~placeholders (map ~path (list ~@placeholder-indices))]
        ~@body)))
 
+(defn- replace-symbols [pattern]
+  (mapv #(if (symbol? %) ''_ %) pattern))
+
 (defmacro handler
   "A macro to generate a command handler that will accept commands matching the given pattern.
 
@@ -100,7 +103,7 @@
                  ~interaction-binding interaction#]
              ~@body)))
        wrap-options
-       (wrap-check-path ~pattern)
+       (wrap-check-path ~(replace-symbols pattern))
        wrap-path))
 
 (defmacro defhandler
@@ -131,7 +134,7 @@
   `(-> (fn [{{path# :path} :data :as interaction#}]
          (let-placeholders ~prefix path#
            (dispatch (list ~@handlers) (assoc interaction# :path (vec (drop ~(count prefix) path#))))))
-       (wrap-check-path ~prefix :prefix-check? true)
+       (wrap-check-path ~(replace-symbols prefix) :prefix-check? true)
        wrap-path))
 
 (defn paths
