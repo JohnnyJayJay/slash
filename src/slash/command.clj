@@ -8,11 +8,13 @@
   Examples (what the command data represents => what this function returns):
   - `/foo bar baz` => [\"foo\" \"bar\" \"baz\"]
   - `/foo` => [\"foo\"]"
-  [command]
-  (->> command
-       (iterate (comp #(get % 0 nil) :options))
-       (take-while (comp #{1 2} :type))
-       (mapv :name)))
+  [{:keys [name options] :as _command}]
+  (into
+   [name]
+   (->> (options 0 nil)
+        (iterate (comp #(get % 0 nil) :options))
+        (take-while (comp #{1 2} :type))
+        (mapv :name))))
 
 (defn- actual-command? [layer]
   (-> layer :options first #{1 2} not))
@@ -31,14 +33,16 @@
 (defn wrap-options
   "Middleware that attaches the `:option-map` (obtained by [[option-map]]) to the command, if not already present."
   [handler]
-  (fn [command]
-    (handler (cond-> command (not (:option-map command)) (assoc :option-map (option-map command))))))
+  (fn [{{:keys [option-map] :as command} :data :as interaction}]
+    (handler (cond-> interaction
+               (not option-map) (assoc-in [:data :option-map] (option-map command))))))
 
 (defn wrap-path
   "Middleware that attaches the `:path` (obtained by [[path]]) to the command, if not already present."
   [handler]
-  (fn [command]
-    (handler (cond-> command (not (:path command)) (assoc :path (path command))))))
+  (fn [{{:keys [path] :as command} :data :as interaction}]
+    (handler (cond-> interaction
+               (not path) (assoc-in [:data :path] (path command))))))
 
 (defn- paths-match? [pattern actual]
   (and
@@ -54,9 +58,9 @@
   `path` is a vector of strings (literal matches) and symbols (placeholders that match any value).
   Optionally, `:prefix-check? true` can be set, in which case it will only be checked whether `path` prefixes the command path."
   [handler path & {:keys [prefix-check?]}]
-  (fn [{actual-path :path :as command}]
+  (fn [{{actual-path :path} :data :as interaction}]
     (when (paths-match? path (cond->> actual-path prefix-check? (take (count path))))
-      (handler command))))
+      (handler interaction))))
 
 (defn- placeholder-positions
   [path]
@@ -78,7 +82,7 @@
 
   `pattern` is a vector of literals (strings) and placeholders (symbols).
   Placeholders will match and be bound to any string at that position in the command path.
-  `interaction-binding` is a binding that will be bound to the entire command object.
+  `interaction-binding` is a binding that will be bound to the entire interaction object.
   `options` is either a vector, in which case  the symbols in that vector will be bound to the options with corresponding names
   - otherwise, it will be bound to the command's [[option-map]] directly.
   `body` is the command logic. It may access any of the bound symbols above.
@@ -86,7 +90,7 @@
   The function returned by this already has the [[wrap-options]], [[wrap-check-path]] and [[wrap-path]] middlewares applied."
   {:style/indent 3}
   [pattern interaction-binding options & body]
-  `(-> (fn [{:keys [option-map# path#] :as command#}]
+  `(-> (fn [{{:keys [option-map# path#]} :data :as interaction#}]
          (let-placeholders ~pattern path#
            (let [~(if (vector? options) `{:keys [~@options]} options) option-map#
                  ~interaction-binding interaction#]
@@ -104,13 +108,13 @@
 (def dispatch
   "A function to dispatch a command to a list of handlers.
 
-  Takes two arguments: `handlers` (a list of command handler functions) and `command`,
-  the interaction data of a command execution.
+  Takes two arguments: `handlers` (a list of command handler functions) and `interaction`,
+  the interaction of a command execution.
 
   Each handler will be run until one is found that does not return `nil`.
   The [[wrap-path]] middleware is already applied to this function."
-  (-> (fn [handlers command]
-        (some #(some-> %) (map #(% command) handlers)))
+  (-> (fn [handlers interaction]
+        (some #(some-> %) (map #(% interaction) handlers)))
       wrap-path))
 
 (defmacro group
@@ -120,9 +124,9 @@
   `handlers` are command handler functions."
   {:style/indent 1}
   [prefix & handlers]
-  `(-> (fn [{:keys [path#] :as command#}]
+  `(-> (fn [{{:keys [path#]} :data :as interaction#}]
          (let-placeholders ~prefix path#
-           (dispatch (list ~@handlers) (assoc command# :path (vec (drop ~(count prefix) path#))))))
+           (dispatch (list ~@handlers) (assoc interaction# :path (vec (drop ~(count prefix) path#))))))
        (wrap-check-path ~prefix :prefix-check? true)
        wrap-path))
 

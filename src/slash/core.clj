@@ -13,10 +13,9 @@
   "Takes a handler map and an interaction and routes the interaction to the correct handler.
 
   The handler map should map each interaction type to one handler function.
-  The handler functions take interaction data.
+  The handler functions take the interaction as a parameter.
   See [[slash.gateway/gateway-defaults]] and [[slash.webhook/webhook-defaults]] for default handler maps.
 
   The interaction object passed to this function must be given as a Clojure map with keywords as keys."
-  [handlers {:keys [type data] :as _interaction}]
-  ((-> type interaction-types handlers) data))
-
+  [handlers {:keys [type] :as interaction}]
+  ((-> type interaction-types handlers) interaction))
