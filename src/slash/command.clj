@@ -1,6 +1,6 @@
 (ns slash.command)
 
-(defn command-path [{{:keys [name options]} :data}]
+(defn command-path [{:keys [name options] :as _command}]
   (into
    [name]
    (->> (get options 0 nil)
@@ -11,8 +11,8 @@
 (defn- actual-command? [layer]
   (-> layer :options first #{1 2} not))
 
-(defn command-options [interaction]
-  (loop [layer interaction]
+(defn command-options [command]
+  (loop [layer command]
     (if (actual-command? layer)
       (zipmap (map (comp keyword :name) (:options layer)) (map :value (:options layer)))
       (recur (-> layer :options first)))))
