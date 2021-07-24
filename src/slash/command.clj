@@ -73,7 +73,7 @@
        (filter (comp symbol? second))
        (map first)))
 
-(defmacro ^:private let-placeholders
+(defmacro let-placeholders
   {:style/indent 2}
   [pattern path & body]
   (let [placeholder-indices (placeholder-positions pattern)
@@ -100,7 +100,7 @@
                  ~interaction-binding interaction#]
              ~@body)))
        wrap-options
-       (wrap-check-path ~path)
+       (wrap-check-path ~pattern)
        wrap-path))
 
 (defmacro defhandler
