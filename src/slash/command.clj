@@ -58,7 +58,9 @@
   "Middleware that delegates to the handler only if the command `:path` matches the given `path` pattern.
 
   `path` is a vector of strings (literal matches) and symbols (placeholders that match any value).
-  Optionally, `:prefix-check? true` can be set, in which case it will only be checked whether `path` prefixes the command path."
+  Optionally, `:prefix-check? true` can be set, in which case it will only be checked whether `path` prefixes the command path.
+
+  Must run after [[wrap-path]]."
   [handler path & {:keys [prefix-check?]}]
   (fn [{{actual-path :path} :data :as interaction}]
     (when (paths-match? path (cond->> actual-path prefix-check? (take (count path))))
