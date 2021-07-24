@@ -33,16 +33,18 @@
 (defn wrap-options
   "Middleware that attaches the `:option-map` (obtained by [[option-map]]) to the command, if not already present."
   [handler]
-  (fn [{{:keys [option-map] :as command} :data :as interaction}]
+  (fn [{command :data :as interaction}]
     (handler (cond-> interaction
-               (not option-map) (assoc-in [:data :option-map] (option-map command))))))
+               (not (contains? command :option-map))
+               (assoc-in [:data :option-map] (option-map command))))))
 
 (defn wrap-path
   "Middleware that attaches the `:path` (obtained by [[path]]) to the command, if not already present."
   [handler]
-  (fn [{{:keys [path] :as command} :data :as interaction}]
+  (fn [{command :data :as interaction}]
     (handler (cond-> interaction
-               (not path) (assoc-in [:data :path] (path command))))))
+               (not (contains? command :path))
+               (assoc-in [:data :path] (path command))))))
 
 (defn- paths-match? [pattern actual]
   (and
