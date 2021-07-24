@@ -94,7 +94,7 @@
   The function returned by this already has the [[wrap-options]], [[wrap-check-path]] and [[wrap-path]] middlewares applied."
   {:style/indent 3}
   [pattern interaction-binding options & body]
-  `(-> (fn [{{:keys [option-map# path#]} :data :as interaction#}]
+  `(-> (fn [{{option-map# :option-map path# :path} :data :as interaction#}]
          (let-placeholders ~pattern path#
            (let [~(if (vector? options) `{:keys [~@options]} options) option-map#
                  ~interaction-binding interaction#]
@@ -128,7 +128,7 @@
   `handlers` are command handler functions."
   {:style/indent 1}
   [prefix & handlers]
-  `(-> (fn [{{:keys [path#]} :data :as interaction#}]
+  `(-> (fn [{{path# :path} :data :as interaction#}]
          (let-placeholders ~prefix path#
            (dispatch (list ~@handlers) (assoc interaction# :path (vec (drop ~(count prefix) path#))))))
        (wrap-check-path ~prefix :prefix-check? true)
