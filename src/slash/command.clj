@@ -1,4 +1,5 @@
-(ns slash.command)
+(ns slash.command
+  "The command namespace contains functions to create command handlers and dispatch commands.")
 
 (defn path
   "Given a command, returns the fully qualified command name as a vector.

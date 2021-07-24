@@ -1,9 +1,15 @@
-(ns slash.command.structure)
+(ns slash.command.structure
+  "Functions to make command definition easier.
+
+  Read https://discord.com/developers/docs/interactions/slash-commands first to understand the structure of slash commands.")
 
 (defn- omission-map [& keyvals]
   (reduce (fn [m [key val]] (cond-> m (some? val) (assoc key val))) {} (partition 2 keyvals)))
 
 (defn command
+  "Create a top level command.
+
+  See https://discord.com/developers/docs/interactions/slash-commands#application-command-object-application-command-structure"
   [name description & {:keys [default-permission guild-id options]}]
   (omission-map
    :name name
@@ -13,6 +19,7 @@
    :default_permission default-permission))
 
 (defn sub-command-group
+  "Create a sub command group option."
   [name description & sub-commands]
   (omission-map
    :type 2
@@ -21,6 +28,7 @@
    :options sub-commands))
 
 (defn sub-command
+  "Create a sub command option."
   [name description & {:keys [options]}]
   (omission-map
    :type 1
@@ -29,6 +37,7 @@
    :options options))
 
 (def option-types
+  "Map of option type names (keywords) to their identifiers."
   {:string 3
    :integer 4
    :boolean 5
@@ -39,6 +48,7 @@
    :number 10})
 
 (defn option
+  "Create a regular option."
   [name description type & {:keys [required choices]}]
   (omission-map
    :type (option-types type type)
@@ -48,6 +58,7 @@
    :choices choices))
 
 (defn choice
+  "Create an option choice for a choice set."
   [name value]
   {:name name
    :value value})
