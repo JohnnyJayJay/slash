@@ -112,17 +112,15 @@
   [symbol path interaction-binding options & body]
   `(def ~symbol (handler ~path ~interaction-binding ~options ~@body)))
 
-(def dispatch
+(defn dispatch
   "A function to dispatch a command to a list of handlers.
 
   Takes two arguments: `handlers` (a list of command handler functions) and `interaction`,
   the interaction of a command execution.
 
-  Each handler will be run until one is found that does not return `nil`.
-  The [[wrap-path]] middleware is already applied to this function."
-  (-> (fn [handlers interaction]
-        (some #(some-> %) (map #(% interaction) handlers)))
-      wrap-path))
+  Each handler will be run until one is found that does not return `nil`."
+  [handlers interaction]
+  (some #(some-> %) (map #(% interaction) handlers)))
 
 (defmacro group
   "A macro to combine multiple handlers into one under a common prefix.
