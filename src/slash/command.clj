@@ -11,7 +11,7 @@
   [{:keys [name options] :as _command}]
   (into
    [name]
-   (->> (options 0 nil)
+   (->> (get options 0 nil)
         (iterate (comp #(get % 0 nil) :options))
         (take-while (comp #{1 2} :type))
         (mapv :name))))
