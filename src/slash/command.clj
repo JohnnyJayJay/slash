@@ -17,7 +17,7 @@
         (mapv :name))))
 
 (defn- actual-command? [layer]
-  (-> layer :options first #{1 2} not))
+  (-> layer :options first :type #{1 2} not))
 
 (defn option-map
   "Returns the options of a command as a map of keywords -> values.
