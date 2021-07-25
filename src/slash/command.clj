@@ -131,7 +131,7 @@
   [prefix & handlers]
   `(-> (fn [{{path# :path} :data :as interaction#}]
          (let-placeholders ~prefix path#
-           (dispatch (list ~@handlers) (assoc interaction# :path (vec (drop ~(count prefix) path#))))))
+           (dispatch (list ~@handlers) (assoc-in interaction# [:data :path] (vec (drop ~(count prefix) path#))))))
        (wrap-check-path ~(replace-symbols prefix) :prefix-check? true)
        wrap-path))
 
