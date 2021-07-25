@@ -4,6 +4,8 @@ A small Clojure library designed to handle and route Discord interactions, both 
 
 slash is environment-agnostic, extensible through middleware and works directly with Clojure data (no JSON parsing/printing included).
 
+[![Clojars Project](https://img.shields.io/clojars/v/com.github.johnnyjayjay/slash.svg)](https://clojars.org/com.github.johnnyjayjay/slash)
+
 ## Command Structure Definition
 
 slash provides utilities to define slash commands in `slash.command.structure`.
