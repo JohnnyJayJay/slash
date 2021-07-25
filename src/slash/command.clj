@@ -99,8 +99,8 @@
   [pattern interaction-binding options & body]
   `(-> (fn [{{option-map# :option-map path# :path} :data :as interaction#}]
          (let-placeholders ~pattern path#
-           (let [~(if (vector? options) `{:keys [~@options]} options) option-map#
-                 ~interaction-binding interaction#]
+           (let [~interaction-binding interaction#
+                 ~(if (vector? options) `{:keys [~@options]} options) option-map#]
              ~@body)))
        wrap-options
        (wrap-check-path ~(replace-symbols pattern))
