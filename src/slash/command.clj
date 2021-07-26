@@ -108,7 +108,7 @@
 
 (defmacro defhandler
   "Utility macro for `(def my-handler (handler ...))` (see [[handler]])"
-  {:style/indent 1}
+  {:style/indent 4}
   [symbol pattern interaction-binding options & body]
   `(def ~symbol (handler ~pattern ~interaction-binding ~options ~@body)))
 
