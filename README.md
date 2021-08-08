@@ -151,7 +151,7 @@ responses from your handlers and let the middleware respond via REST. You only n
 (require '[discljord.messaging :as rest]
          '[discljord.connections :as gateway]
          '[discljord.events :as events]
-         '[core.async :as a]
+         '[clojure.core.async :as a]
          '[slash.gateway :refer [gateway-defaults wrap-response-return]])
 
 (let [rest-conn (rest/start-connection! "bot token")
