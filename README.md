@@ -6,6 +6,11 @@ slash is environment-agnostic, extensible through middleware and works directly 
 
 [![Clojars Project](https://img.shields.io/clojars/v/com.github.johnnyjayjay/slash.svg)](https://clojars.org/com.github.johnnyjayjay/slash)
 
+**slash is currently in a Proof-of-Concept-phase and more features are to be added.**\
+Such features include:
+ - Add functions to create components, similar to slash command helpers
+ - Add more middleware: argument validation, permission checks, ...
+
 ## Command Structure Definition
 
 slash provides utilities to define slash commands in `slash.command.structure`.
