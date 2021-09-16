@@ -1,10 +1,8 @@
 (ns slash.command.structure
   "Functions to make command definition easier.
 
-  Read https://discord.com/developers/docs/interactions/slash-commands first to understand the structure of slash commands.")
-
-(defn- omission-map [& keyvals]
-  (reduce (fn [m [key val]] (cond-> m (some? val) (assoc key val))) {} (partition 2 keyvals)))
+  Read https://discord.com/developers/docs/interactions/slash-commands first to understand the structure of slash commands."
+  (:require [slash.util :refer [omission-map]]))
 
 (defn command
   "Create a top level command.
@@ -37,7 +35,7 @@
    :options options))
 
 (def option-types
-  "Map of option type names (keywords) to their identifiers."
+  "Map of option type names (keywords) to their numerical identifiers."
   {:string 3
    :integer 4
    :boolean 5
