@@ -24,6 +24,20 @@
    :default_permission default-permission
    :type (some-> type command-types)))
 
+(defn message-command
+  "Create a top level message command.
+
+  See https://discord.com/developers/docs/interactions/application-commands#message-commands."
+  [name & {:keys [default-permission]}]
+  (command name "" :default-permission default-permission :type :message))
+
+(defn user-command
+  "Create a top level user command.
+
+  See https://discord.com/developers/docs/interactions/application-commands#user-commands."
+  [name & {:keys [default-permission]}]
+  (command name "" :default-permission default-permission :type :user))
+
 (defn sub-command-group
   "Create a sub command group option."
   [name description & sub-commands]
