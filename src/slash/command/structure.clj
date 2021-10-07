@@ -53,15 +53,33 @@
    :mentionable 9
    :number 10})
 
+(def channel-types
+  "Map of channel type names (keywords) to numerical channel type identifiers."
+  {:guild-text 0
+   :dm 1
+   :guild-voice 2
+   :group-dm 3
+   :guild-category 4
+   :guild-news 5
+   :guild-store 6
+   :guild-news-thread 10
+   :guild-public-thread 11
+   :guild-private-thread 12
+   :guild-stage-voice 13})
+
 (defn option
-  "Create a regular option."
-  [name description type & {:keys [required choices]}]
+  "Create a regular option.
+
+  `:channel-types` must be a collection of keys from [[channel-types]], if given.
+  This may only be set when `type` is `:channel`."
+  [name description type & {:keys [required choices] ch-types :channel-types}]
   (omission-map
    :type (option-types type type)
    :name name
    :description description
    :required required
-   :choices choices))
+   :choices choices
+   :channel_types (some->> ch-types (map channel-types))))
 
 (defn choice
   "Create an option choice for a choice set."
