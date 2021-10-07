@@ -14,7 +14,7 @@
   "Create a top level command.
 
   See https://discord.com/developers/docs/interactions/slash-commands#application-command-object-application-command-structure.
-  `type` is one of the keys in [[command-types]]."
+  `:type` must be one of the keys in [[command-types]], if given."
   [name description & {:keys [default-permission guild-id options type]}]
   (omission-map
    :name name
