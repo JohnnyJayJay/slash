@@ -4,17 +4,25 @@
   Read https://discord.com/developers/docs/interactions/slash-commands first to understand the structure of slash commands."
   (:require [slash.util :refer [omission-map]]))
 
+(def command-types
+  "Map of command type names (keywords) to numerical command type identifiers."
+  {:chat-input 1
+   :user 2
+   :message 3})
+
 (defn command
   "Create a top level command.
 
-  See https://discord.com/developers/docs/interactions/slash-commands#application-command-object-application-command-structure"
-  [name description & {:keys [default-permission guild-id options]}]
+  See https://discord.com/developers/docs/interactions/slash-commands#application-command-object-application-command-structure.
+  `type` is one of the keys in [[command-types]]."
+  [name description & {:keys [default-permission guild-id options type]}]
   (omission-map
    :name name
    :description description
    :options options
    :guild_id guild-id
-   :default_permission default-permission))
+   :default_permission default-permission
+   :type (some-> type command-types)))
 
 (defn sub-command-group
   "Create a sub command group option."
