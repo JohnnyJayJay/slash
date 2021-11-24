@@ -11,7 +11,8 @@
   The interaction handlers in this map simply don't do anything."
   {:ping nop
    :application-command nop
-   :message-component nop})
+   :message-component nop
+   :application-command-autocomplete nop})
 
 (defn wrap-response-return
   "Middleware that takes the return value of an interaction handler and consumes it in some way.
