@@ -47,14 +47,16 @@
 
 (defn option
   "Create a regular option."
-  [name description type & {:keys [required choices autocomplete]}]
+  [name description type & {:keys [required choices autocomplete min-value max-value]}]
   (omission-map
    :type (option-types type type)
    :name name
    :description description
    :required required
    :choices choices
-   :autocomplete autocomplete))
+   :autocomplete autocomplete
+   :min_value min-value
+   :max_value max-value))
 
 (defn choice
   "Create an option choice for a choice set."
