@@ -27,13 +27,20 @@
   (is (= {:type 3
           :name "baz"
           :description "quz"
-          :required true}
-         (option "baz" "quz" :string :required true)))
+          :required true
+          :autocomplete true}
+         (option "baz" "quz" :string :required true :autocomplete true)))
   (is (= {:type 6
           :name "baz"
           :description "quz"
           :choices [:foo :bar]}
-         (option "baz" "quz" :user :choices [:foo :bar]))))
+         (option "baz" "quz" :user :choices [:foo :bar])))
+  (is (= {:type 4
+          :name "baz"
+          :description "quz"
+          :min_value -56
+          :max_value 42}
+         (option "baz" "quz" :integer :min-value -56 :max-value 42))))
 
 (deftest choice-test
   (is (= {:name "foo"
