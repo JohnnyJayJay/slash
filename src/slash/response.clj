@@ -27,6 +27,12 @@
   {:type 7
    :data data})
 
+(defn autocomplete-result
+  "Return suggestions for autocompletion (only for autocomplete interactions)."
+  [choices]
+  {:type 8
+   :data {:choices choices}})
+
 (defn ephemeral
   "Takes an interaction response and makes it ephemeral."
   [response]
