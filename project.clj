@@ -1,4 +1,4 @@
-(defproject com.github.johnnyjayjay/slash "0.2.0-SNAPSHOT"
+(defproject com.github.johnnyjayjay/slash "0.3.0-SNAPSHOT"
   :description "A library for handling and routing Discord interactions"
   :url "https://github.com/JohnnyJayJay/slash"
   :license {}
