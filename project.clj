@@ -3,5 +3,5 @@
   :url "https://github.com/JohnnyJayJay/slash"
   :license {:name "MIT License"
             :url "https://mit-license.org"}
-  :dependencies [[org.clojure/clojure "1.10.1"]]
+  :dependencies [[org.clojure/clojure "1.10.3"]]
   :repl-options {:init-ns slash.core})
