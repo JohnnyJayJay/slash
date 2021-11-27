@@ -86,13 +86,16 @@
 
   `:channel-types` must be a collection of keys from [[channel-types]], if given.
   This may only be set when `type` is `:channel`."
-  [name description type & {:keys [required choices] ch-types :channel-types}]
+  [name description type & {:keys [required choices autocomplete min-value max-value] ch-types :channel-types}]
   (omission-map
    :type (option-types type type)
    :name name
    :description description
    :required required
    :choices choices
+   :autocomplete autocomplete
+   :min_value min-value
+   :max_value max-value
    :channel_types (some->> ch-types (map channel-types))))
 
 (defn choice

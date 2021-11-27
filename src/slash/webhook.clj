@@ -15,4 +15,5 @@
   Returns a 400 Bad Request response for all interactions except PING, for which it returns a PONG response."
   {:ping (constantly pong)
    :application-command interaction-not-supported
-   :message-component interaction-not-supported})
+   :message-component interaction-not-supported
+   :application-command-autocomplete interaction-not-supported})

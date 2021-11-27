@@ -7,7 +7,8 @@
   See https://discord.com/developers/docs/interactions/slash-commands#interaction-object-interaction-request-type"
   {1 :ping
    2 :application-command
-   3 :message-component})
+   3 :message-component
+   4 :application-command-autocomplete})
 
 (defn route-interaction
   "Takes a handler map and an interaction and routes the interaction to the correct handler.
