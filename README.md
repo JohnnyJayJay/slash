@@ -8,7 +8,6 @@ slash is environment-agnostic, extensible through middleware and works directly 
 
 **slash is currently in a Proof-of-Concept-phase and more features are to be added.**\
 Such features include:
- - Add functions to create components, similar to slash command helpers
  - Add more middleware: argument validation, permission checks, ...
 
 ## Command Structure Definition
