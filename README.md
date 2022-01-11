@@ -8,7 +8,6 @@ slash is environment-agnostic, extensible through middleware and works directly 
 
 **slash is currently in a Proof-of-Concept-phase and more features are to be added.**\
 Such features include:
- - Add functions to create components, similar to slash command helpers
  - Add more middleware: argument validation, permission checks, ...
 
 ## Command Structure Definition
@@ -169,6 +168,16 @@ responses from your handlers and let the middleware respond via REST. You only n
   (events/message-pump! event-channel (partial events/dispatch-handlers {:interaction-create event-handler})))
 ```
 
+## clj-kondo support for macros
+
+You can find a clj-kondo config that gets rid of "unresolved symbol" warnings in [.clj-kondo/](./.clj-kondo). Just copy [the hooks](./.clj-kondo/hooks) to your clj-kondo config folder (preserving the directory structure, of course!) and add this to your `config.edn`:
+
+``` clojure
+{:hooks {:analyze-call {slash.command/handler hooks.slash/handler
+                        slash.command/defhandler hooks.slash/defhandler
+                        slash.command/group hooks.slash/group
+                        slash.command/defpaths hooks.slash/defpaths}}}
+```
 
 ## License
 
