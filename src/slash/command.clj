@@ -26,7 +26,7 @@
 (defn option-map
   "Returns the options of a command as a map of keywords -> values.
 
-  The command is the data associated with an interaction create event of type 2 as Clojure data.
+  The command is the data associated with an interaction create event as Clojure data.
   'options' here means the options the user sets, like `baz` in `/foo bar baz: 3`, but not `bar`."
   [command]
   (into
@@ -36,23 +36,36 @@
 (defn full-option-map
   "Returns the options of a command as a map of keywords -> option objects.
 
-  The command is the data associated with an interaction create event of type 2 as Clojure data.
+  The command is the data associated with an interaction create event as Clojure data.
   'options' here means the options the user sets, like `baz` in `/foo bar baz: 3`, but not `bar`."
   [command]
   (into
    (linked/map)
    (map (juxt (comp keyword :name) identity) (:options (find-actual-command command)))))
 
+(defn focused-option
+  "Given a list of command options, returns the name of the option that is currently in focus (or `nil` if none is in focus)."
+  [options]
+  (->> options (filter :focused) first :name))
+
 (defn wrap-options
-  "Middleware that attaches the `:option-map` (obtained by [[option-map]]) to the command, if not already present."
+  "Middleware that attaches the following keys to the interaction data (if not already applied):
+  - `:option-map` (obtained by [[option-map]])
+  - `:full-option-map` (obtained by [[full-option-map]])
+  - `:focused-option` (name of the focused option if any - obtained by [[focused-option]])"
   [handler]
   (fn [{command :data :as interaction}]
-    (handler (cond-> interaction
-               (not (contains? command :option-map))
-               (assoc-in [:data :option-map] (option-map command))
-
-               (not (contains? command :full-option-map))
-               (assoc-in [:data :full-option-map] (full-option-map command))))))
+    (handler
+     (if (contains? command :full-option-map)
+       interaction
+       (let [actual-command (find-actual-command command)
+             full-options (full-option-map actual-command)
+             focused-option (->> full-options vals focused-option)
+             options (option-map actual-command)]
+         (update interaction :data assoc
+                 :option-map options
+                 :full-option-map full-options
+                 :focused-option focused-option))))))
 
 (defn wrap-path
   "Middleware that attaches the `:path` (obtained by [[path]]) to the command, if not already present."
