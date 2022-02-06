@@ -33,13 +33,15 @@
    (linked/map)
    (map (juxt (comp keyword :name) :value) (:options (find-actual-command command)))))
 
-(defn raw-options
-  "Returns the options of a command as-is, i.e. as a list of maps.
+(defn full-option-map
+  "Returns the options of a command as a map of keywords -> option objects.
 
   The command is the data associated with an interaction create event of type 2 as Clojure data.
   'options' here means the options the user sets, like `baz` in `/foo bar baz: 3`, but not `bar`."
   [command]
-  (:options (find-actual-command command)))
+  (into
+   (linked/map)
+   (map (juxt (comp keyword :name) identity) (:options (find-actual-command command)))))
 
 (defn wrap-options
   "Middleware that attaches the `:option-map` (obtained by [[option-map]]) to the command, if not already present."
@@ -50,7 +52,7 @@
                (assoc-in [:data :option-map] (option-map command))
 
                (not (contains? command :raw-options))
-               (assoc-in [:data :raw-options] (raw-options command))))))
+               (assoc-in [:data :full-option-map] (full-option-map command))))))
 
 (defn wrap-path
   "Middleware that attaches the `:path` (obtained by [[path]]) to the command, if not already present."
