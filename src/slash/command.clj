@@ -46,7 +46,7 @@
 (defn focused-option
   "Given a list of command options, returns the name of the option that is currently in focus (or `nil` if none is in focus)."
   [options]
-  (->> options (filter :focused) first :name))
+  (->> options (filter :focused) first :name keyword))
 
 (defn wrap-options
   "Middleware that attaches the following keys to the interaction data (if not already applied):
