@@ -20,16 +20,18 @@
 (defn- actual-command? [layer]
   (-> layer :options first :type #{1 2} not))
 
+(defn- find-actual-command [command]
+  (->> command (iterate (comp first :options)) (filter actual-command?) first))
+
 (defn option-map
   "Returns the options of a command as a map of keywords -> values.
 
   The command is the data associated with an interaction create event of type 2 as Clojure data.
   'options' here means the options the user sets, like `baz` in `/foo bar baz: 3`, but not `bar`."
   [command]
-  (loop [layer command]
-    (if (actual-command? layer)
-      (into (linked/map) (map (juxt (comp keyword :name) :value) (:options layer)))
-      (recur (-> layer :options first)))))
+  (into
+   (linked/map)
+   (map (juxt (comp keyword :name) :value) (:options (find-actual-command command)))))
 
 (defn wrap-options
   "Middleware that attaches the `:option-map` (obtained by [[option-map]]) to the command, if not already present."
