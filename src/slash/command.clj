@@ -126,14 +126,16 @@
   The function returned by this already has the [[wrap-options]], [[wrap-check-path]] and [[wrap-path]] middlewares applied."
   {:style/indent 3}
   [pattern interaction-binding options & body]
-  `(-> (fn [{{option-map# :option-map path# :path} :data :as interaction#}]
-         (let-placeholders ~pattern path#
-           (let [~interaction-binding interaction#
-                 ~(if (vector? options) `{:keys [~@options]} options) option-map#]
-             ~@body)))
-       wrap-options
-       (wrap-check-path ~(replace-symbols pattern))
-       wrap-path))
+  (let [full? (:full (meta options))]
+    `(-> (fn [{{option-map# ~(if full? :full-option-map :option-map) path# :path} :data
+               :as interaction#}]
+           (let-placeholders ~pattern path#
+                             (let [~interaction-binding interaction#
+                                   ~(if (vector? options) `{:keys [~@options]} options) option-map#]
+                               ~@body)))
+         wrap-options
+         (wrap-check-path ~(replace-symbols pattern))
+         wrap-path)))
 
 (defmacro defhandler
   "Utility macro for `(def my-handler (handler ...))` (see [[handler]])"
