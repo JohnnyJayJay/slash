@@ -51,7 +51,7 @@
                (not (contains? command :option-map))
                (assoc-in [:data :option-map] (option-map command))
 
-               (not (contains? command :raw-options))
+               (not (contains? command :full-option-map))
                (assoc-in [:data :full-option-map] (full-option-map command))))))
 
 (defn wrap-path
