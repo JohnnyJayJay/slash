@@ -40,7 +40,12 @@
           :description "quz"
           :min_value -56
           :max_value 42}
-         (option "baz" "quz" :integer :min-value -56 :max-value 42))))
+         (option "baz" "quz" :integer :min-value -56 :max-value 42)))
+  (is (= {:type 7
+          :name "baz"
+          :description "quz"
+          :channel_types [0 2]}
+         (option "baz" "quz" :channel :channel-types [:guild-text :guild-voice]))))
 
 (deftest choice-test
   (is (= {:name "foo"
