@@ -1,5 +1,6 @@
 (ns slash.command
-  "The command namespace contains functions to create command handlers and dispatch commands.")
+  "The command namespace contains functions to create command handlers and dispatch commands."
+  (:require [linked.core :as linked]))
 
 (defn path
   "Given a command, returns the fully qualified command name as a vector.
@@ -27,7 +28,7 @@
   [command]
   (loop [layer command]
     (if (actual-command? layer)
-      (zipmap (map (comp keyword :name) (:options layer)) (map :value (:options layer)))
+      (into (linked/map) (map (juxt (comp keyword :name) :value) (:options layer)))
       (recur (-> layer :options first)))))
 
 (defn wrap-options
