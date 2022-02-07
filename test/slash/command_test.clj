@@ -35,6 +35,12 @@
     [{:type 1
       :name "bar"}]})
 
+(deftest option-key-test
+  (is (= "1foo" (option-key "1foo")))
+  (is (= "123" (option-key "123")))
+  (is (= :crazy-stuff (option-key "crazy-stuff")))
+  (is (= :fo1o (option-key "fo1o"))))
+
 (deftest path-test
   (is (= ["foo" "bar" "baz"] (path foo-bar-baz)))
   (is (= ["foo"] (path foo)))
