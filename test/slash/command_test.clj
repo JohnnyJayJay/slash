@@ -13,7 +13,8 @@
         :options
         [{:type 3
           :name "hello"
-          :value "world"}
+          :value "world"
+          :focused true}
          {:type 4
           :name "num"
           :value 56}]}]}]})
@@ -46,9 +47,28 @@
   (testing "Options don't exist"
     (is (= {} (option-map foo-bar)))))
 
+(deftest full-option-map-test
+  (testing "Options exist"
+    (is (= {:hello {:type 3, :name "hello", :value "world", :focused true}, :num {:type 4, :name "num", :value 56}}
+           (full-option-map foo-bar-baz)))
+    (is (= {:opt {:type 5, :name "opt", :value true}, :chan {:type 7, :name "chan", :value {:id "123456789"}}}
+           (full-option-map foo))))
+  (testing "Options don't exist"
+    (is (= {} (full-option-map foo-bar)))))
+
+(deftest focused-option-test
+  (testing "Focused option"
+    (is (= :hello (focused-option (-> foo-bar-baz :options first :options first :options)))))
+  (testing "No focused option"
+    (is (nil? (focused-option (:options foo))))))
+
 (deftest option-map-mw-test
-  (letfn [(handler [{{:keys [option-map]} :data}] option-map)]
-    (is (= {:hello "world" :num 56} ((wrap-options handler) {:data foo-bar-baz})))))
+  (letfn [(handler [{{:keys [option-map full-option-map focused-option]} :data}]
+            [option-map full-option-map focused-option])]
+    (is (= [{:hello "world" :num 56}
+            {:hello {:type 3, :name "hello", :value "world", :focused true}, :num {:type 4, :name "num", :value 56}}
+            :hello]
+           ((wrap-options handler) {:data foo-bar-baz})))))
 
 (deftest path-mw-test
   (letfn [(handler [{{:keys [path]} :data}] path)]
@@ -79,11 +99,15 @@
 
 (def foo-_-baz-handler
   (handler ["foo" bar "baz"] all [hello num]
-    [bar (update all :data dissoc :option-map :path) hello num]))
+    [bar (update all :data dissoc :option-map :full-option-map :focused-option :path) hello num]))
 
 (def foo-handler
   (handler ["foo"] _ {:keys [opt] :as options}
     [opt options]))
+
+(def full-foo-handler
+  (handler ["foo"] _ ^:full [opt]
+    opt))
 
 (deftest handler-test
   (testing "option vector"
@@ -91,7 +115,9 @@
     (is (= ["bar" {:data foo-bar-baz} "world" 56] (foo-_-baz-handler {:data foo-bar-baz}))))
   (testing "option binding"
     (is (nil? (foo-handler {:data foo-bar})))
-    (is (= [true {:opt true :chan {:id "123456789"}}] (foo-handler {:data foo})))))
+    (is (= [true {:opt true :chan {:id "123456789"}}] (foo-handler {:data foo}))))
+  (testing "full option binding"
+    (is (= {:type 5, :name "opt", :value true} (full-foo-handler {:data foo})))))
 
 (def num-handlers
   (mapv handler-path

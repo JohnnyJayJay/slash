@@ -96,7 +96,7 @@
    :autocomplete autocomplete
    :min_value min-value
    :max_value max-value
-   :channel_types (some->> ch-types (map channel-types))))
+   :channel_types (some->> ch-types (mapv channel-types))))
 
 (defn choice
   "Create an option choice for a choice set."
