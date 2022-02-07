@@ -28,7 +28,7 @@
 
   In practice, this means: strings that start with a digit are returned as-is, everything else is turned into a keyword."
   [name]
-  (cond-> name (not (Character/isDigit ^char (first name))) keyword))
+  (some-> name (cond-> (and (seq name) (not (Character/isDigit ^char (first name)))) keyword)))
 
 (defn option-map
   "Returns the options of a command as a map of keywords -> values.
