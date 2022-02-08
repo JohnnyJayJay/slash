@@ -14,7 +14,7 @@ Such features include:
 
 slash provides utilities to define slash commands in `slash.command.structure`.
 
-Once you are familiar with [how slash commands are structured](https://discord.com/developers/docs/interactions/slash-commands), the functions should be self-explanatory.
+Once you are familiar with [how slash commands are structured](https://discord.com/developers/docs/interactions/application-commands), the functions should be self-explanatory.
 
 Examples:
 
@@ -48,6 +48,28 @@ Examples:
      [input-option])]))
 ```
 
+## Component Structure Definition
+
+slash also provides similar utilities to create [message components](https://discord.com/developers/docs/interactions/message-components).
+
+Examples:
+
+``` clojure
+(require '[slash.component.structure :refer :all])
+
+(def my-components
+  [(action-row
+    (button :danger "unsubscribe" :label "Turn notifications off")
+    (button :success "subcribe" :label "Turn notifications on"))
+   (action-row
+    (select-menu
+     "language"
+     [(select-option "English" "EN" :emoji {:name "🇬🇧"})
+      (select-option "French" "FR" :emoji {:name "🇫🇷"})
+      (select-option "Spanish" "ES" :emoji {:name "🇪🇸"})]
+     :placeholder "Language"))])
+```
+
 ## Routing 
 
 You can use slash to handle interaction events based on their type.
@@ -74,7 +96,7 @@ Simple, single-command example:
 
 ``` clojure
 (require '[slash.command :as cmd] 
-         '[slash.response :refer [channel-message ephemeral]]) ; The response namespace provides utility functions to create interaction responses
+         '[slash.response :as rsp :refer [channel-message ephemeral]]) ; The response namespace provides utility functions to create interaction responses
 
 (cmd/defhandler echo-handler
   ["echo"] ; Command path
@@ -124,6 +146,20 @@ An example with multiple (sub-)commands:
 ```
 
 Similar to the previous example, `command-paths` can now be used as a command handler. It will call each of its nested handlers with the interaction and stop once a handler is found that does not return `nil`.
+
+### Autocomplete 
+
+You can also use the command routing facilities to provide autocomplete for your commands.
+
+``` clojure
+;; Will produce autocompletion for command `/foo bar` on option `baz`, using the partial value of `baz` in the process
+(cmd/defhandler foo-bar-autocompleter
+  ["foo" "bar"]
+  {{:keys [focused-option]} :data}
+  [baz]
+  (case focused-option 
+    :baz (rsp/autocomplete-result (map (partial str baz) [1 2 3]))))
+```
 
 ### Full Webhook Example 
 
