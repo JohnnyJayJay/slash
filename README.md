@@ -165,8 +165,9 @@ responses from your handlers and let the middleware respond via REST. You only n
                         (partial (assoc gateway-defaults :application-command command-paths))
                         (wrap-response-return (fn [id token {:keys [type data]}]
                                                 (rest/create-interaction-response! rest-conn id token type :data data))))]
-  (events/message-pump! event-channel (partial events/dispatch-handlers {:interaction-create event-handler})))
+  (events/message-pump! event-channel (partial events/dispatch-handlers {:interaction-create [#(event-handler %2)]})))
 ```
+This is a very quick and dirty example. More in-depth documentation and tutorials will follow soon.
 
 ## clj-kondo support for macros
 
