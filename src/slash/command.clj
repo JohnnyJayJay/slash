@@ -23,6 +23,13 @@
 (defn- find-actual-command [command]
   (->> command (iterate (comp first :options)) (filter actual-command?) first))
 
+(defn option-key
+  "Turns an option name (string) into an appropriate key representation for a map.
+
+  In practice, this means: strings that start with a digit are returned as-is, everything else is turned into a keyword."
+  [name]
+  (some-> name (cond-> (and (seq name) (not (Character/isDigit ^char (first name)))) keyword)))
+
 (defn option-map
   "Returns the options of a command as a map of keywords -> values.
 
@@ -31,7 +38,7 @@
   [command]
   (into
    (linked/map)
-   (map (juxt (comp keyword :name) :value) (:options (find-actual-command command)))))
+   (map (juxt (comp option-key :name) :value) (:options (find-actual-command command)))))
 
 (defn full-option-map
   "Returns the options of a command as a map of keywords -> option objects.
@@ -41,12 +48,12 @@
   [command]
   (into
    (linked/map)
-   (map (juxt (comp keyword :name) identity) (:options (find-actual-command command)))))
+   (map (juxt (comp option-key :name) identity) (:options (find-actual-command command)))))
 
 (defn focused-option
   "Given a list of command options, returns the name of the option that is currently in focus (or `nil` if none is in focus)."
   [options]
-  (->> options (filter :focused) first :name keyword))
+  (->> options (filter :focused) first :name option-key))
 
 (defn wrap-options
   "Middleware that attaches the following keys to the interaction data (if not already applied):
