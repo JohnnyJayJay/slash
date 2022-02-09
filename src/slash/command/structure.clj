@@ -65,7 +65,8 @@
    :channel 7
    :role 8
    :mentionable 9
-   :number 10})
+   :number 10
+   :attachment 11})
 
 (def channel-types
   "Map of channel type names (keywords) to numerical channel type identifiers."
