@@ -66,3 +66,23 @@
    :description description
    :emoji emoji
    :default default))
+
+(def text-input-styles
+  {:short 1
+   :paragraph 2})
+
+(defn text-input
+  "Create a text input component for a modal.
+
+  See https://discord.com/developers/docs/interactions/message-components#text-inputs."
+  [style custom-id label & {:keys [min-length max-length required value placeholder]}]
+  (omission-map
+   :type 4
+   :style (text-input-styles style)
+   :custom_id custom-id
+   :label label
+   :min_length min-length
+   :max_length max-length
+   :required required
+   :value value
+   :placeholder placeholder))

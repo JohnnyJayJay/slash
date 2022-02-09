@@ -8,7 +8,8 @@
   {1 :ping
    2 :application-command
    3 :message-component
-   4 :application-command-autocomplete})
+   4 :application-command-autocomplete
+   5 :modal-submit})
 
 (defn route-interaction
   "Takes a handler map and an interaction and routes the interaction to the correct handler.

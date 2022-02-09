@@ -12,7 +12,8 @@
   {:ping nop
    :application-command nop
    :message-component nop
-   :application-command-autocomplete nop})
+   :application-command-autocomplete nop
+   :modal-submit nop})
 
 (defn wrap-response-return
   "Middleware that takes the return value of an interaction handler and consumes it in some way.
