@@ -16,4 +16,5 @@
   {:ping (constantly pong)
    :application-command interaction-not-supported
    :message-component interaction-not-supported
-   :application-command-autocomplete interaction-not-supported})
+   :application-command-autocomplete interaction-not-supported
+   :modal-submit interaction-not-supported})
