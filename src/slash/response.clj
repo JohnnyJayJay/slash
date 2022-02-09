@@ -33,6 +33,14 @@
   {:type 8
    :data {:choices choices}})
 
+(defn modal
+  "Return a [modal](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-modal)."
+  [title custom-id & components]
+  {:type 9
+   :data {:title title
+          :custom_id custom-id
+          :components components}})
+
 (defn ephemeral
   "Takes an interaction response and makes it ephemeral."
   [response]
