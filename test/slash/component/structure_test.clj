@@ -82,3 +82,31 @@
           "B"
           42
           :default true))))
+
+(deftest text-input-test
+  (is (= {:type 4
+          :style 1
+          :custom_id "xyz"
+          :label "Enter x"
+          :value "Hello"
+          :max_length 50
+          :required true}
+         (text-input
+          :short
+          "xyz"
+          "Enter x"
+          :max-length 50
+          :required true
+          :value "Hello")))
+  (is (= {:type 4
+          :style 2
+          :custom_id "abc"
+          :label "Enter y"
+          :placeholder "foo bar"
+          :min_length 20}
+         (text-input
+          :paragraph
+          "abc"
+          "Enter y"
+          :min-length 20
+          :placeholder "foo bar"))))
