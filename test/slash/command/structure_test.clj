@@ -6,8 +6,9 @@
   (is (= {:name "foo"
           :description "bar"
           :options [:baz :quz]
-          :default_permission false}
-         (command "foo" "bar" :default-permission false :options [:baz :quz]))))
+          :default_permission false
+          :default_member_permissions "0"}
+         (command "foo" "bar" :default-permission false :default-member-permissions "0" :options [:baz :quz]))))
 
 (deftest sub-command-group-test
   (is (= {:type 2

@@ -15,28 +15,29 @@
 
   See https://discord.com/developers/docs/interactions/slash-commands#application-command-object-application-command-structure.
   `:type` must be one of the keys in [[command-types]], if given."
-  [name description & {:keys [default-permission guild-id options type]}]
+  [name description & {:keys [default-permission default-member-permissions guild-id options type]}]
   (omission-map
    :name name
    :description description
    :options options
    :guild_id guild-id
    :default_permission default-permission
+   :default_member_permissions default-member-permissions
    :type (some-> type command-types)))
 
 (defn message-command
   "Create a top level message command.
 
   See https://discord.com/developers/docs/interactions/application-commands#message-commands."
-  [name & {:keys [default-permission]}]
-  (command name "" :default-permission default-permission :type :message))
+  [name & {:keys [default-permission default-member-permissions]}]
+  (command name "" :default-permission default-permission :default_member_permissions default-member-permissions :type :message))
 
 (defn user-command
   "Create a top level user command.
 
   See https://discord.com/developers/docs/interactions/application-commands#user-commands."
-  [name & {:keys [default-permission]}]
-  (command name "" :default-permission default-permission :type :user))
+  [name & {:keys [default-permission default-member-permissions]}]
+  (command name "" :default-permission default-permission :default_member_permissions default-member-permissions :type :user))
 
 (defn sub-command-group
   "Create a sub command group option."
