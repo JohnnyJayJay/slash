@@ -218,6 +218,6 @@ You can find a clj-kondo config that gets rid of "unresolved symbol" warnings in
 
 ## License
 
-Copyright © 2021 JohnnyJayJay
+Copyright © 2021-2023 JohnnyJayJay
 
 Licensed under the MIT license.
