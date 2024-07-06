@@ -158,7 +158,11 @@
 
   Each handler will be run until one is found that does not return `nil`."
   [handlers interaction]
-  (some #(some-> %) (map #(% interaction) handlers)))
+  (loop [[handler & rest] handlers]
+    (when handler
+      (if-let [result (handler interaction)]
+        result
+        (recur rest)))))
 
 (defmacro group
   "A macro to combine multiple handlers into one under a common prefix.
